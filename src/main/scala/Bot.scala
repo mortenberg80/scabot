@@ -44,8 +44,8 @@ class Bot(var hostname:String, var port: Int) extends Runnable {
     out = new PrintWriter(echoSocket.getOutputStream(), true)
     in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()))
 
-    sendMessage("NICK scabot")
-    sendMessage("USER scabot " + hostname + " bla scabot")
+    sendMessage("NICK Scabot")
+    sendMessage("USER Scabot 0 :TheScalaBot")
     sendMessage("JOIN #oztest")
   }
 
