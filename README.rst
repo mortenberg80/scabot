@@ -11,7 +11,7 @@ Getting started
 
 #. Check out the code
 
-#. Run sbt::
+#. Run sbt
     sbt
 
 #. Start the bot
