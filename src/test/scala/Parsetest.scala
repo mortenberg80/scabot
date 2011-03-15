@@ -20,7 +20,7 @@ class ParseSpec extends FlatSpec with ShouldMatchers {
   "A Parser" should "set command argument to 12345 value when message is PING :12345" in {
     val parser = new Parser("PING :12345")
     parser.parse()
-    parser.argument should equal ("12345")
+    parser.argument should equal (":12345")
   }
 
   "A Parser" should "set command to 'notice' when message is NOTICE" in {

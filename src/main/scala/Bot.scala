@@ -1,62 +1,73 @@
 import java.net._
 import java.io._
 
-/*
-  HOST = 'irc.homelien.no'
-  PORT = 6667
-  NICK = 'mynick'
-  IDENT = 'pybot'
-  REALNAME = 'I am'
-  CHANNEL = '#mychannel'
-*/
+/**
+ * Protocol: http://www.ietf.org/rfc/rfc1459.txt
+ */
 
 object Bot {
   def main(args: Array[String]) {
 
-    val hostname = "irc.no.quakenet.eu.org"
-    //val hostname = "irc.homelien.no"
+    val servername = "underworld.no.quakenet.org"
+    //val servername = "irc.no.quakenet.eu.org"
+    //val servername = "irc.homelien.no"
     val port = 6667
 
-    var bot = new Bot(hostname, port)
+    var bot = new Bot(servername, port)
     var botThread = new Thread(bot)
     botThread.start()
 
     var systemIn = new BufferedReader(new InputStreamReader(System.in))
+    println("Waiting for user input")
     var line = systemIn.readLine()
     while(line != "quit") {
       bot.sendMessage(line)
       line = systemIn.readLine()
     }
-    println("Hello, world!")
 
     bot.quit()
   }
 }
 
-class Bot(var hostname:String, var port: Int) extends Runnable {
+class Bot(var servername:String, var port: Int) extends Runnable {
+
+  val nick = "Scabot"
+  val username = "Scabot"
+  val channel = "#oztest"
+  val realname = "Scabot"
+  val hostname = "0" // ignored
 
   var echoSocket: Socket = null
   var out: PrintWriter = null
   var in: BufferedReader = null
 
   def connect() = {
-    echoSocket = new Socket(hostname, port)
+    println("Connecting to %s:%d".format(servername, port))
+    echoSocket = new Socket(servername, port)
     out = new PrintWriter(echoSocket.getOutputStream(), true)
     in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()))
 
-    sendMessage("NICK Scabot")
-    sendMessage("USER Scabot 0 :TheScalaBot")
-    sendMessage("JOIN #oztest")
+    
+    sendMessage("NICK %s".format(nick))
+    sendMessage("USER %s %s %s :%s".format(username, hostname, servername, realname))
+    // sendMessage("USER " + username + " " + hostname + " " + servername + " :" + realname)
+    sendMessage("JOIN %s".format(channel))
   }
 
   def run() = {
+    println("Starting bot")
     connect()
     
     var line = in.readLine()
     while(line != null) {
       println(line)
+      
+      val parser = new Parser(line)
+      parser.parse()
+      if("ping".equals(parser.command)) {
+        sendMessage("PONG %s".format(parser.argument))
+      }
       line = in.readLine()
-      val tokens = line.split(" ")
     }
   }
 

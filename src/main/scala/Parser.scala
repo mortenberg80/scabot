@@ -5,7 +5,7 @@ class Parser(message: String) {
     var command = ""
     var argument = ""
 
-    val PingRE = """PING :(\d*)""".r
+    val PingRE = """PING (.*)""".r
     val NoticeRE = """NOTICE.*""".r
 
     def parse() = message match {
