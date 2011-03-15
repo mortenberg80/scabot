@@ -8,9 +8,9 @@ Getting started
 ---------------
 
 #. You must have SBT installed, see http://code.google.com/p/simple-build-tool/
-
+    
 #. Check out the code
-
+    
 #. Run sbt
     sbt
 
