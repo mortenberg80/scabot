@@ -9,7 +9,6 @@ object Bot {
   def main(args: Array[String]) {
 
     val servername = "underworld.no.quakenet.org"
-    //val servername = "irc.no.quakenet.eu.org"
     //val servername = "irc.homelien.no"
     val port = 6667
 
@@ -50,7 +49,6 @@ class Bot(var servername:String, var port: Int) extends Runnable {
     
     sendMessage("NICK %s".format(nick))
     sendMessage("USER %s %s %s :%s".format(username, hostname, servername, realname))
-    // sendMessage("USER " + username + " " + hostname + " " + servername + " :" + realname)
     sendMessage("JOIN %s".format(channel))
   }
 
