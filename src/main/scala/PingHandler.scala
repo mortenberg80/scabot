@@ -1,8 +1,8 @@
-class PingHandler(responder: Responder) {
+class PingHandler(responder: Responder) extends Handler{
 
 	val PingRE = """PING\s*(.*)""".r
 
-	def canHandle(message: String) = message match {
+	def canHandle(message: String):Boolean = message match {
 		case PingRE(argument) => true
 		case _ => false
 	}

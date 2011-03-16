@@ -37,13 +37,13 @@ class Bot(var servername:String, var port: Int) extends Runnable {
   val hostname = "0" // ignored
 
   var echoSocket: Socket = null
-  var out: PrintWriter = null
+  var responder: Responder = null
   var in: BufferedReader = null
 
   def connect() = {
     println("Connecting to %s:%d".format(servername, port))
     echoSocket = new Socket(servername, port)
-    out = new PrintWriter(echoSocket.getOutputStream(), true)
+    responder = new Responder(echoSocket.getOutputStream())
     in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()))
 
     
@@ -55,31 +55,33 @@ class Bot(var servername:String, var port: Int) extends Runnable {
   def run() = {
     println("Starting bot")
     connect()
+
+    val pingHandler = new PingHandler(responder)
     
     var line = in.readLine()
     while(line != null) {
       println(line)
       
-      val parser = new Parser(line)
-      parser.parse()
-      if("ping".equals(parser.command)) {
-        sendMessage("PONG %s".format(parser.argument))
-      }
+      if(pingHandler.canHandle(line)) pingHandler.handle(line)
       line = in.readLine()
     }
   }
 
   def sendMessage(message: String) {
     println("Writing message to server: " + message)
-    out.println(message)
+    responder.respond(message)
   }
 
   def quit() = {
-    out.close()
+    responder.close()
     in.close()
     echoSocket.close()
   }
+}
 
-
+trait Handler {
+  
+  def canHandle(message: String): Boolean
+  def handle(message: String)
 }
 
