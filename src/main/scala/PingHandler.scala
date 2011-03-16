@@ -9,6 +9,7 @@ class PingHandler(responder: Responder) {
 
 	def handle(message: String) = message match {
 		case PingRE(argument) => respond(argument)
+		case _ => 
 	}
 
 	def respond(argument: String) = {
